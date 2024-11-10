@@ -1,0 +1,34 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from './Screens/home';
+import Second from './Screens/second';
+import { Pressable,Text } from "react-native";
+
+const Stack=createNativeStackNavigator()
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Home' screenOptions={{
+          headerTitleAlign:'center',
+          // headerShown:false,
+          headerStyle:{
+            backgroundColor:""
+          },
+          headerTintColor:"#fff",
+          headerTitleStyle:{fontWeight:"bold"},
+          headerRight:()=>
+          (
+            <Pressable onPress={()=>alert("Menu Pressed")}>
+              <Text style={{color:"#fff",fontSize:16}}>Menu</Text>
+            </Pressable>
+          )
+        }}>
+        <Stack.Screen name="Home" component={Home} 
+        />
+        <Stack.Screen name="Second" component={Second} options={({route})=>({
+          title:route.params.name
+        })} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
