@@ -16,6 +16,7 @@ import Feather from "@expo/vector-icons/Feather";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import { CartContext } from "./UseContext/context";
+import banner from ".././Screens/assests/6985.jpg";
 export default function SingleProduct({ route }) {
   const { id } = route.params;
   const [product, setProduct] = useState({});
@@ -98,7 +99,9 @@ export default function SingleProduct({ route }) {
           </View>
         </View>
       </View>
-      <View className="bg-gray-400 mx-7 rounded-xl p-2 mt-20 flex flex-row justify-between">
+      <Image source={banner} className="w-80 mt-3 h-32 mx-auto rounded-md" />
+
+      <View className="bg-gray-400 mx-7 rounded-xl p-2 mt-5 flex flex-row justify-between">
         <TextInput placeholder="Search for dishes" />
         <View className="flex flex-row gap-x-3">
           <Feather name="search" size={24} color="black" />
@@ -327,7 +330,7 @@ export default function SingleProduct({ route }) {
           </Text>
         </View>
         <View className="flex flex-row items-center gap-x-2">
-          <Text className="text-[20px]">Cart</Text>
+          <Text className="text-[20px]">View cart</Text>
           <AntDesign name="right" size={24} color="black" />
         </View>
       </TouchableOpacity>

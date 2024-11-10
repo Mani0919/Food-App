@@ -24,7 +24,7 @@ function TabNavigator() {
   } = useContext(CartContext);
   return (
     <Tab.Navigator
-      initialRouteName="menu"
+      // initialRouteName="Menu"
       screenOptions={{
         tabBarActiveTintColor: "purple",
         tabBarShowLabel: false, // Hide tab labels if you don't need them
@@ -32,21 +32,20 @@ function TabNavigator() {
       }}
     >
       <Tab.Screen
-        name="tab1"
+        name="home"
         component={Tab1}
         options={{
+          headerShown:false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="home-outline" size={24} style={{ color: color }} />
           ),
-          // tabBarBadge: 4,
         }}
       />
       <Tab.Screen
         name="Menu"
         component={Tab2}
         options={{
-          
-          headerShown: false,
+          // headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="menu-outline" size={24} style={{ color: color }} />
           ),
@@ -63,16 +62,6 @@ function TabNavigator() {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="whatsapp"
-        component={Whatsapp}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="logo-whatsapp" size={24} style={{ color: color }} />
-          ),
-          headerShown: false,
-        }}
-      /> */}
       <Tab.Screen
         name="Whishlist"
         component={Tab4}
