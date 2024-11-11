@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AllProducts } from "../Services/allproducts";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
-export default function Tab3() {
+export default function Cart() {
   const navigation = useNavigation();
   const {
     addToCart,

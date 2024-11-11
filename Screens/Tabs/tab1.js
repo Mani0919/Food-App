@@ -7,6 +7,9 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  StatusBar,
+  useWindowDimensions,
+  Dimensions,
 } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import React, { useEffect, useRef, useState } from "react";
@@ -18,8 +21,11 @@ import img1 from "./../assests/pizaa.jpg";
 import img2 from "./../assests/grocery.jpeg";
 import img3 from "./../assests/plate.jpg";
 import img4 from "./../assests/deliverybox.jpg";
-import banner from "./../assests/6985.jpg";
 import * as ImagePicker from "expo-image-picker";
+import banner1 from "../../Screens/assests/img11.jpg";
+import banner2 from "../../Screens/assests/img12.jpg";
+import banner3 from "../../Screens/assests/img13.jpg";
+import Carousel from "react-native-reanimated-carousel";
 export default function Tab1() {
   const ref = useRef();
   const data = [
@@ -51,6 +57,7 @@ export default function Tab1() {
   const items = ['"products"', '"dihes"', '"groceries"'];
   const [search, setSearch] = useState("");
   const [image, setImage] = useState("");
+  const { width } = Dimensions.get("window");
   useEffect(() => {
     let index = 0;
     const intervalId = setInterval(() => {
@@ -81,11 +88,13 @@ export default function Tab1() {
     if (!result.cancelled) {
       const uri = result.assets ? result.assets[0].uri : result.uri;
       console.log(uri);
-      setImage(uri); 
+      setImage(uri);
     }
   };
+  const images = [banner1, banner2, banner3];
   return (
     <SafeAreaView>
+      <StatusBar animated={true} backgroundColor="#9ca3af" />
       <ScrollView className="mt-2">
         <View className="flex flex-row justify-between p-2 mx-3">
           <View>
@@ -96,6 +105,7 @@ export default function Tab1() {
             </View>
             <Text>Tekkalipatnam village,palasa</Text>
           </View>
+
           <TouchableOpacity onPress={openCamera}>
             {image === "" ? (
               <Image
@@ -103,7 +113,10 @@ export default function Tab1() {
                 className="w-10 h-10"
               />
             ) : (
-              <Image source={image} className="w-20 h-20" />
+              <Image
+                source={{ uri: image }}
+                className="w-12 h-12 rounded-full"
+              />
             )}
             {/* <Image source={image} style={style.img} /> */}
           </TouchableOpacity>
@@ -112,10 +125,35 @@ export default function Tab1() {
           <TextInput placeholder={`Search for ${search}`} />
           <View className="flex flex-row gap-x-1">
             <Feather name="search" size={24} color="black" />
-            {/* <View className="border-r-[1px]"></View> */}
           </View>
         </View>
-        <Image source={banner} className="w-80 mt-3 h-32 mx-auto rounded-md" />
+        <View className="mt-5 h-32">
+          <Carousel
+            loop
+            width={width}
+            height={width / 3}
+            autoPlay={true}
+            data={images}
+            mode="parallax" 
+            scrollAnimationDuration={2000}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  marginHorizontal: 10,
+                  height:"70px",
+                }}
+              >
+                <Image
+                  source={item}
+                  style={{ width: "100%" }}
+                  className="rounded-md h-40 object-cover"
+                />
+              </View>
+            )}
+          />
+        </View>
         <View className="flex flex-row flex-wrap justify-start mt-5">
           {data.map((item, index) => (
             <TouchableOpacity

@@ -21,6 +21,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { Linking } from "react-native";
+import { StatusBar } from "expo-status-bar";
 export default function SingleProduct({ route }) {
   const { id } = route.params;
   const [product, setProduct] = useState({});
@@ -68,7 +69,8 @@ export default function SingleProduct({ route }) {
   };
   return (
     <SafeAreaView className="relative flex-1">
-      <View className="mt-2 bg-gray-400 " style={style.main}>
+      <StatusBar animated={true} backgroundColor="#9ca3af" />
+      <View className=" bg-gray-400 " style={style.main}>
         <View className="flex flex-row justify-between items-center">
           <View className="ml-3">
             <AntDesign
@@ -109,242 +111,253 @@ export default function SingleProduct({ route }) {
           </View>
         </View>
       </View>
-      <Image source={banner} className="w-80 mt-3 h-32 mx-auto rounded-md" />
+      <ScrollView className="relative ">
+        <Image source={banner} className="w-80 mt-3 h-32 mx-auto rounded-md" />
 
-      <View className="bg-gray-400 mx-7 rounded-xl p-2 mt-5 flex flex-row justify-between">
-        <TextInput placeholder="Search for dishes" />
-        <View className="flex flex-row gap-x-3">
-          <Feather name="search" size={24} color="black" />
-          <View className="border-r-2 border-gray-500"></View>
+        <View className="bg-gray-400 mx-7 rounded-xl p-2 mt-5 flex flex-row justify-between">
+          <TextInput placeholder="Search for dishes" />
+          <View className="flex flex-row gap-x-3">
+            <Feather name="search" size={24} color="black" />
+            <View className="border-r-2 border-gray-500"></View>
+          </View>
         </View>
-      </View>
-      <View className="p-2 mt-5 ">
-        <View className="flex flex-row justify-between">
-          <Text className="font-bold text-xl">Reccommended{" ( 29 ) "}</Text>
+        <View className="p-2 mt-5 ">
+          <View className="flex flex-row justify-between">
+            <Text className="font-bold text-xl">Reccommended{" ( 29 ) "}</Text>
 
-          <TouchableOpacity
-            // onPress={() => setToggle(!toggle)}
-            onPress={() => {
-              setToggle(!toggle);
-              if (!toggle) {
-                setData([]);
-              } else {
-                fun();
-              }
-            }}
-          >
-            <AntDesign name={toggle ? "up" : "down"} size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="">
-          {data.map((item, index) => {
-            return (
-              <View className="p-2 flex flex-row justify-between" key={index}>
-                <View>
-                  <Text className="text-2xl font-bold">{item.name}</Text>
-                  <View className="flex flex-row items-center justify-start">
-                    <Text className="text-md">₹</Text>
-                    <Text className="text-xl">{item.price}</Text>
-                  </View>
-                  <View className="flex flex-row items-center gap-x-1">
-                    <AntDesign name="star" size={18} color="green" />
-                    <Text className="text-green-700 text-[24px]">
-                      {item.rating}
-                    </Text>
-                    <Text className="text-gray-500 text-[22px]">{"(182)"}</Text>
-                  </View>
-                  <View className="bg-pink-200 rounded-2xl p-2 flex flex-row  items-center gap-x-2">
-                    <Entypo name="save" size={24} color="white" />
-                    <Text className="text-[18px] text-gray-500">
-                      Save to Eatlist
-                    </Text>
-                  </View>
-                  <Text className="mt-2 text-[19px]">{item.desc}...more</Text>
-                </View>
-                <View className="">
-                  <View className="relative">
-                    <Image
-                      source={item.image}
-                      className="w-40 h-32 rounded-xl shadow-lg "
-                    />
-                    <TouchableOpacity
-                      className="bg-white -mt-5 p-3 rounded-2xl mx-5 shadow-lg"
-                      onPress={() => {
-                        handleaddtocart(item._id);
-                        setCartview((prev) => ({
-                          ...prev,
-                          count: prev.count + 1,
-                          view: true,
-                        }));
-                      }}
-                    >
-                      <Text className="text-green-600 text-center text-[20px]">
-                        ADD
+            <TouchableOpacity
+              // onPress={() => setToggle(!toggle)}
+              onPress={() => {
+                setToggle(!toggle);
+                if (!toggle) {
+                  setData([]);
+                } else {
+                  fun();
+                }
+              }}
+            >
+              <AntDesign
+                name={toggle ? "up" : "down"}
+                size={24}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="">
+            {data.map((item, index) => {
+              return (
+                <View className="p-2 flex flex-row justify-between" key={index}>
+                  <View>
+                    <Text className="text-2xl font-bold">{item.name}</Text>
+                    <View className="flex flex-row items-center justify-start">
+                      <Text className="text-md">₹</Text>
+                      <Text className="text-xl">{item.price}</Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-x-1">
+                      <AntDesign name="star" size={18} color="green" />
+                      <Text className="text-green-700 text-[24px]">
+                        {item.rating}
                       </Text>
-                    </TouchableOpacity>
-                    <Text className="text-gray-500 text-center">
-                      Customisable
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
-
-      <View className="p-2 mt-5">
-        <View className="flex flex-row justify-between">
-          <Text className="font-bold text-xl">Veg Products{" ( 14 ) "}</Text>
-          <TouchableOpacity
-            onPress={() => {
-              setVegtoggle(!vegtoggle);
-              if (!vegtoggle) {
-                setVeg([]);
-              } else {
-                fun1();
-              }
-            }}
-          >
-            <AntDesign
-              name={vegtoggle ? "up" : "down"}
-              size={24}
-              color="black"
-            />
-          </TouchableOpacity>
-        </View>
-        <ScrollView>
-          {veg.slice(0, 14).map((item, index) => {
-            return (
-              <View className="p-2 flex flex-row justify-between">
-                <View>
-                  <Text className="text-2xl font-bold">{item.name}</Text>
-                  <View className="flex flex-row items-center justify-start">
-                    <Text className="text-md">₹</Text>
-                    <Text className="text-xl">{item.price}</Text>
-                  </View>
-                  <View className="flex flex-row items-center gap-x-1">
-                    <AntDesign name="star" size={18} color="green" />
-                    <Text className="text-green-700 text-[24px]">
-                      {item.rating}
-                    </Text>
-                    <Text className="text-gray-500 text-[22px]">{"(182)"}</Text>
-                  </View>
-                  <View className="bg-pink-200 rounded-2xl p-2 flex flex-row  items-center gap-x-2">
-                    <Entypo name="save" size={24} color="white" />
-                    <Text className="text-[18px] text-gray-500">
-                      Save to Eatlist
-                    </Text>
-                  </View>
-                  <Text className="mt-2 text-[19px]">{item.desc}...more</Text>
-                </View>
-                <View className="">
-                  <View className="relative">
-                    <Image
-                      source={item.image}
-                      className="w-40 h-32 rounded-xl shadow-lg "
-                    />
-                    <TouchableOpacity className="bg-white -mt-5 p-3 rounded-2xl mx-5 shadow-lg">
-                      <Text className="text-green-600 text-center text-[20px]">
-                        ADD
+                      <Text className="text-gray-500 text-[22px]">
+                        {"(182)"}
                       </Text>
-                    </TouchableOpacity>
-                    <Text className="text-gray-500 text-center">
-                      Customisable
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
-      <View className="p-2 mt-5">
-        <View className="flex flex-row justify-between">
-          <Text className="font-bold text-xl">
-            Non-Veg Products{" ( 13 ) "}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              setNonVegtoggle(!nonvegtoggle);
-              if (!nonvegtoggle) {
-                setNonVeg([]);
-              } else {
-                fun2();
-              }
-            }}
-          >
-            <AntDesign
-              name={nonvegtoggle ? "up" : "down"}
-              size={24}
-              color="black"
-            />
-          </TouchableOpacity>
-        </View>
-        <ScrollView>
-          {nonveg.slice(14, 29).map((item, index) => {
-            return (
-              <View className="p-2 flex flex-row justify-between">
-                <View>
-                  <Text className="text-2xl font-bold">{item.name}</Text>
-                  <View className="flex flex-row items-center justify-start">
-                    <Text className="text-md">₹</Text>
-                    <Text className="text-xl">{item.price}</Text>
-                  </View>
-                  <View className="flex flex-row items-center gap-x-1">
-                    <AntDesign name="star" size={18} color="green" />
-                    <Text className="text-green-700 text-[24px]">
-                      {item.rating}
-                    </Text>
-                    <Text className="text-gray-500 text-[22px]">{"(182)"}</Text>
-                  </View>
-                  <View className="bg-pink-200 rounded-2xl p-2 flex flex-row  items-center gap-x-2">
-                    <Entypo name="save" size={24} color="white" />
-                    <Text className="text-[18px] text-gray-500">
-                      Save to Eatlist
-                    </Text>
-                  </View>
-                  <Text className="mt-2 text-[19px]">{item.desc}...more</Text>
-                </View>
-                <View className="">
-                  <View className="relative">
-                    <Image
-                      source={item.image}
-                      className="w-40 h-32 rounded-xl shadow-lg "
-                    />
-                    <TouchableOpacity className="bg-white -mt-5 p-3 rounded-2xl mx-5 shadow-lg">
-                      <Text className="text-green-600 text-center text-[20px]">
-                        ADD
+                    </View>
+                    <View className="bg-pink-200 rounded-2xl p-2 flex flex-row  items-center gap-x-2">
+                      <Entypo name="save" size={24} color="white" />
+                      <Text className="text-[18px] text-gray-500">
+                        Save to Eatlist
                       </Text>
-                    </TouchableOpacity>
-                    <Text className="text-gray-500 text-center">
-                      Customisable
-                    </Text>
+                    </View>
+                    <Text className="mt-2 text-[19px]">{item.desc}...more</Text>
+                  </View>
+                  <View className="">
+                    <View className="relative">
+                      <Image
+                        source={item.image}
+                        className="w-40 h-32 rounded-xl shadow-lg "
+                      />
+                      <TouchableOpacity
+                        className="bg-white -mt-5 p-3 rounded-2xl mx-5 shadow-lg"
+                        onPress={() => {
+                          handleaddtocart(item._id);
+                          setCartview((prev) => ({
+                            ...prev,
+                            count: prev.count + 1,
+                            view: true,
+                          }));
+                        }}
+                      >
+                        <Text className="text-green-600 text-center text-[20px]">
+                          ADD
+                        </Text>
+                      </TouchableOpacity>
+                      <Text className="text-gray-500 text-center">
+                        Customisable
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
+              );
+            })}
+          </ScrollView>
+        </View>
 
+        <View className="p-2 mt-5">
+          <View className="flex flex-row justify-between">
+            <Text className="font-bold text-xl">Veg Products{" ( 14 ) "}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setVegtoggle(!vegtoggle);
+                if (!vegtoggle) {
+                  setVeg([]);
+                } else {
+                  fun1();
+                }
+              }}
+            >
+              <AntDesign
+                name={vegtoggle ? "up" : "down"}
+                size={24}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+          <ScrollView className="">
+            {veg.slice(0, 15).map((item, index) => {
+              return (
+                <View className="p-2 flex flex-row justify-between" key={index}>
+                  <View>
+                    <Text className="text-2xl font-bold">{item.name}</Text>
+                    <View className="flex flex-row items-center justify-start">
+                      <Text className="text-md">₹</Text>
+                      <Text className="text-xl">{item.price}</Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-x-1">
+                      <AntDesign name="star" size={18} color="green" />
+                      <Text className="text-green-700 text-[24px]">
+                        {item.rating}
+                      </Text>
+                      <Text className="text-gray-500 text-[22px]">
+                        {"(182)"}
+                      </Text>
+                    </View>
+                    <View className="bg-pink-200 rounded-2xl p-2 flex flex-row  items-center gap-x-2">
+                      <Entypo name="save" size={24} color="white" />
+                      <Text className="text-[18px] text-gray-500">
+                        Save to Eatlist
+                      </Text>
+                    </View>
+                    <Text className="mt-2 text-[19px]">{item.desc}...more</Text>
+                  </View>
+                  <View className="">
+                    <View className="relative">
+                      <Image
+                        source={item.image}
+                        className="w-40 h-32 rounded-xl shadow-lg "
+                      />
+                      <TouchableOpacity className="bg-white -mt-5 p-3 rounded-2xl mx-5 shadow-lg">
+                        <Text className="text-green-600 text-center text-[20px]">
+                          ADD
+                        </Text>
+                      </TouchableOpacity>
+                      <Text className="text-gray-500 text-center">
+                        Customisable
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </ScrollView>
+        </View>
+        <View className="p-2 mt-5">
+          <View className="flex flex-row justify-between">
+            <Text className="font-bold text-xl">
+              Non-Veg Products{" ( 13 ) "}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setNonVegtoggle(!nonvegtoggle);
+                if (!nonvegtoggle) {
+                  setNonVeg([]);
+                } else {
+                  fun2();
+                }
+              }}
+            >
+              <AntDesign
+                name={nonvegtoggle ? "up" : "down"}
+                size={24}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+          <ScrollView>
+            {nonveg.slice(14, 29).map((item, index) => {
+              return (
+                <View className="p-2 flex flex-row justify-between">
+                  <View>
+                    <Text className="text-2xl font-bold">{item.name}</Text>
+                    <View className="flex flex-row items-center justify-start">
+                      <Text className="text-md">₹</Text>
+                      <Text className="text-xl">{item.price}</Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-x-1">
+                      <AntDesign name="star" size={18} color="green" />
+                      <Text className="text-green-700 text-[24px]">
+                        {item.rating}
+                      </Text>
+                      <Text className="text-gray-500 text-[22px]">
+                        {"(182)"}
+                      </Text>
+                    </View>
+                    <View className="bg-pink-200 rounded-2xl p-2 flex flex-row  items-center gap-x-2">
+                      <Entypo name="save" size={24} color="white" />
+                      <Text className="text-[18px] text-gray-500">
+                        Save to Eatlist
+                      </Text>
+                    </View>
+                    <Text className="mt-2 text-[19px]">{item.desc}...more</Text>
+                  </View>
+                  <View className="">
+                    <View className="relative">
+                      <Image
+                        source={item.image}
+                        className="w-40 h-32 rounded-xl shadow-lg "
+                      />
+                      <TouchableOpacity className="bg-white -mt-5 p-3 rounded-2xl mx-5 shadow-lg">
+                        <Text className="text-green-600 text-center text-[20px]">
+                          ADD
+                        </Text>
+                      </TouchableOpacity>
+                      <Text className="text-gray-500 text-center">
+                        Customisable
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </ScrollView>
+        </View>
+      
+      </ScrollView>
       <TouchableOpacity
-        className="bg-green-500 p-2 px-3 w-full rounded-xl  py-5 absolute bottom-0 flex justify-between flex-row items-start"
-        style={{ display: cartview.count > 0 ? "flex" : "none" }}
-        onPress={() => navigation.navigate("tab3")}
-      >
-        <View>
-          <Text className="text-[20px]">
-            {cartview.count} {cartview.count > 1 ? "items" : "item"} added into
-            cart
-          </Text>
-        </View>
-        <View className="flex flex-row items-center gap-x-2">
-          <Text className="text-[20px]">View cart</Text>
-          <AntDesign name="right" size={24} color="black" />
-        </View>
-      </TouchableOpacity>
-
+          className="bg-green-500 p-2 px-3 w-full rounded-xl  py-5 absolute bottom-0 flex justify-between flex-row items-start"
+          style={{ display: cartview.count > 0 ? "flex" : "none" }}
+          onPress={() => navigation.navigate("cart")}
+        >
+          <View>
+            <Text className="text-[20px]">
+              {cartview.count} {cartview.count > 1 ? "items" : "item"} added
+              into cart
+            </Text>
+          </View>
+          <View className="flex flex-row items-center gap-x-2">
+            <Text className="text-[20px]">View cart</Text>
+            <AntDesign name="right" size={24} color="black" />
+          </View>
+        </TouchableOpacity>
       <RBSheet
         ref={refRBSheet}
         useNativeDriver={false}

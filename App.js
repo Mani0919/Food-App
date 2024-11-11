@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Tab1 from "./Screens/Tabs/tab1";
 import Tab2 from "./Screens/Tabs/menu";
-import Tab3 from "./Screens/Tabs/cart";
+import cart from "./Screens/Tabs/cart";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Second from "./Screens/second";
 import Home from "./Screens/home";
@@ -13,6 +13,8 @@ import Data from "./Screens/Data";
 import SingleProduct from "./Screens/SingleProduct";
 import { CartContext, CartProvider } from "./Screens/UseContext/context";
 import { useContext } from "react";
+import Cart from "./Screens/Tabs/cart";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -24,9 +26,6 @@ function TabNavigator() {
       // initialRouteName="Menu"
       screenOptions={{
         tabBarActiveTintColor: "orange",
-        tabBarLabel: true,
-        tabBarShowLabel: false, // Hide tab labels if you don't need them
-        // headerShown:false
       }}
     >
       <Tab.Screen
@@ -51,8 +50,8 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="tab3"
-        component={Tab3}
+        name="cart"
+        component={Cart}
         options={{
           headerShown: false,
           tabBarBadge: cart.length > 0 ? cart.length : undefined,
@@ -79,25 +78,28 @@ function TabNavigator() {
 // The main app
 export default function App() {
   return (
-    <CartProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Tabs">
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen
-            name="Tabs"
-            component={TabNavigator}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="singleproduct"
-            component={SingleProduct}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="About" component={Data} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </CartProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <CartProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Tabs">
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen
+              name="Tabs"
+              component={TabNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="singleproduct"
+              component={SingleProduct}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="About" component={Data} />
+            
+          </Stack.Navigator>
+        </NavigationContainer>
+      </CartProvider>
+    </GestureHandlerRootView>
   );
 }
