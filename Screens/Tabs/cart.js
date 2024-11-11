@@ -39,7 +39,7 @@ export default function Tab3() {
   }, [cart]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View className="relative flex-1">
+      <ScrollView className="relative flex-1">
         <View className="mt-5 flex-grow">
           <View className="ml-3 mb-8">
             <AntDesign
@@ -129,11 +129,11 @@ export default function Tab3() {
           )}
         </View>
         {data.length > 0 && (
-          <TouchableOpacity className="bg-orange-400 p-2 mx-20 rounded-lg absolute bottom-5 left-0 right-0">
+          <TouchableOpacity className="bg-orange-400 p-2 mx-20 rounded-lg mb-2 ">
             <Text className="text-center text-white text-xl">Proceed</Text>
           </TouchableOpacity>
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

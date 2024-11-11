@@ -7,7 +7,7 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -17,6 +17,10 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import { CartContext } from "./UseContext/context";
 import banner from ".././Screens/assests/6985.jpg";
+import RBSheet from "react-native-raw-bottom-sheet";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { Linking } from "react-native";
 export default function SingleProduct({ route }) {
   const { id } = route.params;
   const [product, setProduct] = useState({});
@@ -27,6 +31,7 @@ export default function SingleProduct({ route }) {
   const [nonveg, setNonVeg] = useState([]);
   const [vegtoggle, setVegtoggle] = useState(false);
   const [nonvegtoggle, setNonVegtoggle] = useState(false);
+  const refRBSheet = useRef();
   const {
     addToCart,
     removeFromCart,
@@ -75,7 +80,12 @@ export default function SingleProduct({ route }) {
           </View>
           <View className="flex flex-row gap-x-4 mr-3">
             <MaterialIcons name="favorite-border" size={24} color="black" />
-            <AntDesign name="sharealt" size={24} color="black" />
+            <AntDesign
+              name="sharealt"
+              size={24}
+              color="black"
+              onPress={() => refRBSheet.current.open()}
+            />
           </View>
         </View>
         <View className="bg-white  rounded-xl mx-5 p-3 my-5 flex flex-row justify-between">
@@ -334,6 +344,98 @@ export default function SingleProduct({ route }) {
           <AntDesign name="right" size={24} color="black" />
         </View>
       </TouchableOpacity>
+
+      <RBSheet
+        ref={refRBSheet}
+        useNativeDriver={false}
+        // style={}
+        customStyles={{
+          // wrapper: {
+          //   backgroundColor: 'transparent',
+          // },
+          container: {
+            height: 170,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
+          draggableIcon: {
+            backgroundColor: "#000",
+          },
+        }}
+        draggable={true}
+        customModalProps={{
+          animationType: "slide",
+          statusBarTranslucent: true,
+        }}
+        customAvoidingViewProps={{
+          enabled: false,
+        }}
+      >
+        <View>
+          <Text className="text-[23px] ml-3">Share with</Text>
+          <View className="flex flex-row items-center gap-x-5 justify-center mt-3">
+            <TouchableOpacity
+              className="bg-green-500 p-2 rounded-full"
+              onPress={() => {
+                const phoneNumber = "918074259123";
+                const message = "Hello!";
+                const url = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(
+                  message
+                )}`;
+                Linking.openURL(url).catch(() => {
+                  alert("WhatsApp is not installed on your device");
+                });
+              }}
+            >
+              <FontAwesome name="whatsapp" size={44} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-pink-500 p-2 rounded-full"
+              onPress={() => {
+                const url = "instagram://user?username=mani_kanta_t";
+                Linking.openURL(url).catch(() => {
+                  alert("Instagram is not installed on your device");
+                });
+              }}
+            >
+              <Entypo name="instagram" size={40} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-black p-2 rounded-full"
+              onPress={() => {
+                const url = "twitter://user?screen_name=your_username";
+                Linking.openURL(url).catch(() => {
+                  alert("Twitter is not installed on your device");
+                });
+              }}
+            >
+              <AntDesign name="twitter" size={40} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className=" p-2 rounded-full"
+              onPress={() => {
+                const url = "fb://profile/Mani0919";
+                Linking.openURL(url).catch(() => {
+                  alert("Github is not installed on your device");
+                });
+              }}
+            >
+              <AntDesign name="github" size={50} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-blue-500 p-1 rounded-full"
+              onPress={() => {
+                const url = "fb://profile/your_profile_id";
+                Linking.openURL(url).catch(() => {
+                  alert("Facebook is not installed on your device");
+                });
+              }}
+            >
+              <EvilIcons name="sc-facebook" size={55} color="white" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </RBSheet>
     </SafeAreaView>
   );
 }

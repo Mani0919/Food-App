@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -17,10 +17,18 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import { CartContext } from "../UseContext/context";
+import RBSheet from "react-native-raw-bottom-sheet";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { Linking } from "react-native";
 export default function Tab2() {
+  const refRBSheet = useRef();
   const [data, setData] = useState([]);
   const navigation = useNavigation();
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState({
+    view: false,
+    id: "",
+  });
   const {
     addToCart,
     removeFromCart,
@@ -107,12 +115,130 @@ export default function Tab2() {
                   </View>
                 </View>
                 <View className="absolute right-4 top-3">
-                  <Entypo name="dots-three-vertical" size={24} color="black" />
+                  <View className="relative">
+                    <Entypo
+                      name="dots-three-vertical"
+                      size={24}
+                      color="black"
+                      onPress={() => {
+                        setToggle((prev) => ({
+                          ...prev,
+                          view: !prev.view,
+                          id: item._id,
+                        }));
+                      }}
+                    />
+                  </View>
+                  {toggle.view && toggle.id === item._id && (
+                    <View className=" absolute w-32 right-10 bg-gray-500 p-3 rounded-lg">
+                      <View className="mb-2 rounded-md">
+                        <Button title="Add to cart" onPress={()=>addToCart(item._id)}/>
+                      </View>
+                      <View>
+                        <Button
+                          title="Share"
+                          onPress={() => refRBSheet.current.open()}
+                        />
+                      </View>
+                    </View>
+                  )}
                 </View>
               </TouchableOpacity>
             );
           })}
         </View>
+
+        <RBSheet
+          ref={refRBSheet}
+          useNativeDriver={false}
+          // style={}
+          customStyles={{
+            // wrapper: {
+            //   backgroundColor: 'transparent',
+            // },
+            container: {
+              height: 170,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+            },
+            draggableIcon: {
+              backgroundColor: "#000",
+            },
+          }}
+          draggable={true}
+          customModalProps={{
+            animationType: "slide",
+            statusBarTranslucent: true,
+          }}
+          customAvoidingViewProps={{
+            enabled: false,
+          }}
+        >
+          <View>
+            <Text className="text-[23px] ml-3">Share with</Text>
+            <View className="flex flex-row items-center gap-x-5 justify-center mt-3">
+              <TouchableOpacity
+                className="bg-green-500 p-2 rounded-full"
+                onPress={() => {
+                  const phoneNumber = "918074259123";
+                  const message = "Hello!";
+                  const url = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(
+                    message
+                  )}`;
+                  Linking.openURL(url).catch(() => {
+                    alert("WhatsApp is not installed on your device");
+                  });
+                }}
+              >
+                <FontAwesome name="whatsapp" size={44} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-pink-500 p-2 rounded-full"
+                onPress={() => {
+                  const url = "instagram://user?username=mani_kanta_t";
+                  Linking.openURL(url).catch(() => {
+                    alert("Instagram is not installed on your device");
+                  });
+                }}
+              >
+                <Entypo name="instagram" size={40} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-black p-2 rounded-full"
+                onPress={() => {
+                  const url = "twitter://user?screen_name=your_username";
+                  Linking.openURL(url).catch(() => {
+                    alert("Twitter is not installed on your device");
+                  });
+                }}
+              >
+                <AntDesign name="twitter" size={40} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className=" p-2 rounded-full"
+                onPress={() => {
+                  const url = "fb://profile/Mani0919";
+                  Linking.openURL(url).catch(() => {
+                    alert("Github is not installed on your device");
+                  });
+                }}
+              >
+                <AntDesign name="github" size={50} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-blue-500 px-[1.3px] py-2 rounded-full"
+                onPress={() => {
+                  const url = "fb://profile/your_profile_id";
+                  Linking.openURL(url).catch(() => {
+                    alert("Facebook is not installed on your device");
+                  });
+                }}
+              >
+                <EvilIcons name="sc-facebook" size={55} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </RBSheet>
       </ScrollView>
     </SafeAreaView>
   );

@@ -18,15 +18,13 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
-  const {
-    cart,
-    wishlist,
-  } = useContext(CartContext);
+  const { cart, wishlist } = useContext(CartContext);
   return (
     <Tab.Navigator
       // initialRouteName="Menu"
       screenOptions={{
-        tabBarActiveTintColor: "purple",
+        tabBarActiveTintColor: "orange",
+        tabBarLabel: true,
         tabBarShowLabel: false, // Hide tab labels if you don't need them
         // headerShown:false
       }}
@@ -35,7 +33,8 @@ function TabNavigator() {
         name="home"
         component={Tab1}
         options={{
-          headerShown:false,
+          headerShown: false,
+          tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
             <Ionicons name="home-outline" size={24} style={{ color: color }} />
           ),
@@ -55,7 +54,7 @@ function TabNavigator() {
         name="tab3"
         component={Tab3}
         options={{
-          headerShown:false,
+          headerShown: false,
           tabBarBadge: cart.length > 0 ? cart.length : undefined,
           tabBarIcon: ({ color }) => (
             <Ionicons name="cart-outline" size={24} style={{ color: color }} />
@@ -66,6 +65,7 @@ function TabNavigator() {
         name="Whishlist"
         component={Tab4}
         options={{
+          // tabBarLabel: "Wishlist",
           tabBarBadge: wishlist.length > 0 ? wishlist.length : undefined,
           tabBarIcon: ({ color }) => (
             <Ionicons name="heart" size={24} style={{ color: color }} />

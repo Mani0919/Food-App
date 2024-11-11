@@ -19,6 +19,7 @@ import img2 from "./../assests/grocery.jpeg";
 import img3 from "./../assests/plate.jpg";
 import img4 from "./../assests/deliverybox.jpg";
 import banner from "./../assests/6985.jpg";
+import * as ImagePicker from "expo-image-picker";
 export default function Tab1() {
   const ref = useRef();
   const data = [
@@ -49,6 +50,7 @@ export default function Tab1() {
   ];
   const items = ['"products"', '"dihes"', '"groceries"'];
   const [search, setSearch] = useState("");
+  const [image, setImage] = useState("");
   useEffect(() => {
     let index = 0;
     const intervalId = setInterval(() => {
@@ -58,6 +60,30 @@ export default function Tab1() {
 
     return () => clearInterval(intervalId); // Clean up on unmount
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera permissions to make this work!");
+      }
+    })();
+  }, []);
+
+  const openCamera = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      const uri = result.assets ? result.assets[0].uri : result.uri;
+      console.log(uri);
+      setImage(uri); 
+    }
+  };
   return (
     <SafeAreaView>
       <ScrollView className="mt-2">
@@ -70,10 +96,17 @@ export default function Tab1() {
             </View>
             <Text>Tekkalipatnam village,palasa</Text>
           </View>
-          <Image
-            source={require("./../assests/profile.png")}
-            className="w-10 h-10"
-          />
+          <TouchableOpacity onPress={openCamera}>
+            {image === "" ? (
+              <Image
+                source={require("./../assests/profile.png")}
+                className="w-10 h-10"
+              />
+            ) : (
+              <Image source={image} className="w-20 h-20" />
+            )}
+            {/* <Image source={image} style={style.img} /> */}
+          </TouchableOpacity>
         </View>
         <View className="flex flex-row justify-between items-center border-[0.7px] border-gray-500 rounded-lg mx-10 p-2 mt-5">
           <TextInput placeholder={`Search for ${search}`} />
