@@ -1,26 +1,39 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Tab1 from "./Screens/Tabs/tab1";
 import Tab2 from "./Screens/Tabs/menu";
-import cart from "./Screens/Tabs/cart";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import Second from "./Screens/second";
-import Home from "./Screens/home";
 import Tab4 from "./Screens/Tabs/Whislist";
-import Whatsapp from "./Screens/Tabs/Whatsapp";
 import Data from "./Screens/Data";
 import SingleProduct from "./Screens/SingleProduct";
 import { CartContext, CartProvider } from "./Screens/UseContext/context";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Cart from "./Screens/Tabs/cart";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Onborading, { Onboarding } from "./Screens/onBaording/onborading";
+import Login_signup from "./Screens/auth/login_signup";
+import { Alert, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
   const { cart, wishlist } = useContext(CartContext);
+  const navigation = useNavigation();
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to log out?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Logout", onPress: () => navigation.navigate("auth") }, // Replace this with your logout logic
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <Tab.Navigator
       // initialRouteName="Menu"
@@ -71,32 +84,84 @@ function TabNavigator() {
           ),
         }}
       />
+      <Tab.Screen
+        name="Logout"
+        component={() => null}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons
+              name="log-out-outline"
+              size={24}
+              style={{ color: color }}
+            />
+          ),
+        }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault();
+            handleLogout();
+          },
+        }}
+      />
     </Tab.Navigator>
   );
 }
 
 // The main app
 export default function App() {
+  const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(null);
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      const hasOnboarded = await AsyncStorage.getItem("onboarding");
+      setIsOnboardingCompleted(hasOnboarded === "true");
+    };
+    checkOnboardingStatus();
+  }, []);
+
+  if (isOnboardingCompleted === null) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <CartProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Tabs">
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen
-              name="Tabs"
-              component={TabNavigator}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="singleproduct"
-              component={SingleProduct}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen name="About" component={Data} />
-            
+          <Stack.Navigator>
+            {isOnboardingCompleted === false ? (
+              <Stack.Screen
+                name="Onborading"
+                component={Onboarding}
+                options={{
+                  headerShown: false,
+                }}
+              />
+            ) : (
+              <>
+                <Stack.Screen
+                  name="auth"
+                  component={Login_signup}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Tabs"
+                  component={TabNavigator}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="singleproduct"
+                  component={SingleProduct}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen name="About" component={Data} />
+              </>
+            )}
           </Stack.Navigator>
         </NavigationContainer>
       </CartProvider>

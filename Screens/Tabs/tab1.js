@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -26,7 +26,12 @@ import banner1 from "../../Screens/assests/img11.jpg";
 import banner2 from "../../Screens/assests/img12.jpg";
 import banner3 from "../../Screens/assests/img13.jpg";
 import Carousel from "react-native-reanimated-carousel";
+import { useNavigation } from "@react-navigation/native";
+import { CartContext } from "../UseContext/context";
+import { user } from "../database/operation";
 export default function Tab1() {
+  const navigation = useNavigation();
+  const {userDetails}=useContext(CartContext)
   const ref = useRef();
   const data = [
     {
@@ -58,7 +63,23 @@ export default function Tab1() {
   const [search, setSearch] = useState("");
   const [image, setImage] = useState("");
   const { width } = Dimensions.get("window");
+  const [userD,setUser]=useState([])
+  useEffect(()=>
+  {
+    async function fun()
+    {
+      try {
+        const res=await user(userDetails.email,userDetails.password)
+        console.log("result",res)
+        setUser(res)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fun()
+  },[])
   useEffect(() => {
+    // console.log(userDetails)
     let index = 0;
     const intervalId = setInterval(() => {
       setSearch(items[index]);
@@ -92,6 +113,8 @@ export default function Tab1() {
     }
   };
   const images = [banner1, banner2, banner3];
+
+
   return (
     <SafeAreaView>
       <StatusBar animated={true} backgroundColor="#9ca3af" />
@@ -99,11 +122,12 @@ export default function Tab1() {
         <View className="flex flex-row justify-between p-2 mx-3">
           <View>
             <View className="flex flex-row items-center gap-x-1">
-              <FontAwesome5 name="location-arrow" size={24} color="orange" />
-              <Text>Select location</Text>
-              <AntDesign name="down" size={24} color="black" />
+              {/* <FontAwesome5 name="location-arrow" size={24} color="orange" /> */}
+              <Text className="text-[25px]">Hi 👋</Text>
+              <Text className="text-[22px]">{userD[0]?.fullname}</Text>
+              {/* <AntDesign name="down" size={24} color="black" /> */}
             </View>
-            <Text>Tekkalipatnam village,palasa</Text>
+            <Text>{userD[0]?.address}</Text>
           </View>
 
           <TouchableOpacity onPress={openCamera}>
@@ -134,7 +158,7 @@ export default function Tab1() {
             height={width / 3}
             autoPlay={true}
             data={images}
-            mode="parallax" 
+            mode="parallax"
             scrollAnimationDuration={2000}
             renderItem={({ item }) => (
               <View
@@ -142,7 +166,7 @@ export default function Tab1() {
                   flex: 1,
                   justifyContent: "center",
                   marginHorizontal: 10,
-                  height:"70px",
+                  height: "70px",
                 }}
               >
                 <Image
@@ -157,8 +181,9 @@ export default function Tab1() {
         <View className="flex flex-row flex-wrap justify-start mt-5">
           {data.map((item, index) => (
             <TouchableOpacity
-              className="bg-white p-3 w-44 h-56 rounded-xl relative m-2" // Adjust width to control how many items fit in each row
+              className="bg-white p-3 w-44  rounded-xl relative m-2" // Adjust width to control how many items fit in each row
               key={index}
+              onPress={() => navigation.navigate("Menu")}
             >
               <View className="flex flex-col ml-2 gap-y-1">
                 <Text className="text-[20px] font-bold">{item.title}</Text>
@@ -171,10 +196,9 @@ export default function Tab1() {
                   </Text>
                 )}
               </View>
-              <Image
-                source={item.image}
-                className="w-28 h-28 absolute bottom-0 right-0 rounded-2xl"
-              />
+              <View className="flex flex-row justify-end mt-3 -mr-3 -mb-3">
+                <Image source={item.image} className="w-28 h-28  rounded-2xl" />
+              </View>
             </TouchableOpacity>
           ))}
         </View>

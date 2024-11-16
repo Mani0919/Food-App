@@ -32,6 +32,12 @@ export default function SingleProduct({ route }) {
   const [nonveg, setNonVeg] = useState([]);
   const [vegtoggle, setVegtoggle] = useState(false);
   const [nonvegtoggle, setNonVegtoggle] = useState(false);
+  const [addtocart, setAddtocart] = useState([
+    {
+      view: false,
+      id: "",
+    },
+  ]);
   const refRBSheet = useRef();
   const {
     addToCart,
@@ -62,11 +68,24 @@ export default function SingleProduct({ route }) {
   function fun2() {
     setNonVeg(AllProducts);
   }
-  const handleaddtocart = (id) => {
-    // console.log(id)
+
+  const handleAddToCart = (id) => {
     addToCart(id);
-    console.log(id);
+    setCartview((prev) => ({
+      ...prev,
+      count: prev.count + 1,
+      view: true,
+    }));
+    setAddtocart((prev) => {
+      const isInCart = prev.find((item) => item.id === id);
+
+      if (!isInCart) {
+        return [...prev, { view: true, id }];
+      }
+      return prev;
+    });
   };
+
   return (
     <SafeAreaView className="relative flex-1">
       <StatusBar animated={true} backgroundColor="#9ca3af" />
@@ -145,6 +164,9 @@ export default function SingleProduct({ route }) {
           </View>
           <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="">
             {data.map((item, index) => {
+              const isAdded = addtocart.some(
+                (cartItem) => cartItem.id === item._id && cartItem.view
+              );
               return (
                 <View className="p-2 flex flex-row justify-between" key={index}>
                   <View>
@@ -177,20 +199,16 @@ export default function SingleProduct({ route }) {
                         className="w-40 h-32 rounded-xl shadow-lg "
                       />
                       <TouchableOpacity
-                        className="bg-white -mt-5 p-3 rounded-2xl mx-5 shadow-lg"
-                        onPress={() => {
-                          handleaddtocart(item._id);
-                          setCartview((prev) => ({
-                            ...prev,
-                            count: prev.count + 1,
-                            view: true,
-                          }));
-                        }}
+                        className={`${
+                          isAdded ? "bg-gray-500" : "bg-white"
+                        } -mt-5 p-3 rounded-2xl mx-5 shadow-lg`}
+                        onPress={() => handleAddToCart(item._id)}
                       >
                         <Text className="text-green-600 text-center text-[20px]">
-                          ADD
+                          {isAdded ? "ADDED" : "ADD"}
                         </Text>
                       </TouchableOpacity>
+
                       <Text className="text-gray-500 text-center">
                         Customisable
                       </Text>
@@ -340,24 +358,23 @@ export default function SingleProduct({ route }) {
             })}
           </ScrollView>
         </View>
-      
       </ScrollView>
       <TouchableOpacity
-          className="bg-green-500 p-2 px-3 w-full rounded-xl  py-5 absolute bottom-0 flex justify-between flex-row items-start"
-          style={{ display: cartview.count > 0 ? "flex" : "none" }}
-          onPress={() => navigation.navigate("cart")}
-        >
-          <View>
-            <Text className="text-[20px]">
-              {cartview.count} {cartview.count > 1 ? "items" : "item"} added
-              into cart
-            </Text>
-          </View>
-          <View className="flex flex-row items-center gap-x-2">
-            <Text className="text-[20px]">View cart</Text>
-            <AntDesign name="right" size={24} color="black" />
-          </View>
-        </TouchableOpacity>
+        className="bg-green-500 p-2 px-3 w-full rounded-xl  py-5 absolute bottom-0 flex justify-between flex-row items-start"
+        style={{ display: cartview.count > 0 ? "flex" : "none" }}
+        onPress={() => navigation.navigate("cart")}
+      >
+        <View>
+          <Text className="text-[20px]">
+            {cartview.count} {cartview.count > 1 ? "items" : "item"} added into
+            cart
+          </Text>
+        </View>
+        <View className="flex flex-row items-center gap-x-2">
+          <Text className="text-[20px]">View cart</Text>
+          <AntDesign name="right" size={24} color="black" />
+        </View>
+      </TouchableOpacity>
       <RBSheet
         ref={refRBSheet}
         useNativeDriver={false}

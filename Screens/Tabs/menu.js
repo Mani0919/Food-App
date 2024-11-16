@@ -180,8 +180,8 @@ export default function Tab2() {
               <TouchableOpacity
                 className="bg-green-500 p-2 rounded-full"
                 onPress={() => {
-                  const phoneNumber = "918074259123";
-                  const message = "Hello!";
+                  const phoneNumber = "916281723394";
+                  const message = "Hi Saikiran, How can i help u";
                   const url = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(
                     message
                   )}`;

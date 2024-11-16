@@ -55,7 +55,7 @@ export default function Cart() {
                 const cartItem = cart.find(
                   (item1) => item1.productId === item._id
                 );
-                if (!cartItem) return null; // Skip if no matching cart item
+                if (!cartItem) return null; 
 
                 return (
                   <View

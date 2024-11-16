@@ -5,6 +5,10 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [userDetails, setUserDetails] = useState({
+    email: "",
+    password: "",
+  });
 
   const addToCart = (productId) => {
     setCart((prevCart) => {
@@ -53,11 +57,17 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromWishlist = (productId) => {
-    console.log("Removing from wishlist:", productId);
-    setWishlist(
-      (prevWishlist) =>
-        prevWishlist.filter((item) => item.productId !== productId) 
+    // console.log("Removing from wishlist:", productId);
+    setWishlist((prevWishlist) =>
+      prevWishlist.filter((item) => item.productId !== productId)
     );
+  };
+  const addUserDetails = (email, password) => {
+    setUserDetails((prev) => ({
+      ...prev,
+      email: email,
+      password: password,
+    }));
   };
 
   return (
@@ -71,6 +81,8 @@ export const CartProvider = ({ children }) => {
         decreaseCount,
         addToWishlist,
         removeFromWishlist,
+        addUserDetails,
+        userDetails
       }}
     >
       {children}
